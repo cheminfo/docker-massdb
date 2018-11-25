@@ -1,0 +1,25 @@
+version: '2'
+services:
+  mongo:
+    image: mongo:4
+    restart: always
+    volumes:
+      - ./mongo-data:/data/db
+
+  node-massdb-import:
+    build: ./node-massdb
+    #    restart: always
+    privileged: true
+    depends_on:
+      - mongo
+    volumes:
+      - ./data:/git/node-massdb/data
+    command: npm run cron
+
+  node-pubchem:
+    build: ./node-massdb
+    #    restart: always
+    ports:
+      - 3001:80
+    depends_on:
+      - mongo
