@@ -16,7 +16,9 @@ async function parseSDF(src) {
     let molfile = molfileBuffer.toString();
     result.name = molfile.split(/[\r\n]+/)[0].trim();
     result.molfile = molfile;
-    // let molecule = OCLE.Molecule.fromMolfile(molfile);
+    let molecule = OCLE.Molecule.fromMolfile(molfile);
+    result.ocl = molecule.getIDCodeAndCoordinates();
+    result.ocl.index = molecule.getIndex();
     if (result.name) results.push(result);
   }
   return results;

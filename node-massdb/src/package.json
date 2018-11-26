@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "convert-readme": " md2html -w README.md; mkdir -p src/server/staticPages; mv README.html src/server/staticPages/index.html",
+    "convert-readme": " md2html -w ../../README.md; mkdir -p src/server/staticPages; mv ../../README.html src/server/staticPages/index.html",
     "cron": "node src/sync/cron.js",
     "test": "jest",
     "server": "npm run convert-readme; node src/server/index.js --port 80",
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/cheminfo/docker-massdb#readme",
   "dependencies": {
     "buffer-split": "^1.0.0",
+    "convert-to-jcamp": "^1.1.3",
     "debug": "^4.1.0",
     "delay": "^3.0.0",
     "fs-extra": "^6.0.1",

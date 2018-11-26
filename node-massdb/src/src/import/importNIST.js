@@ -55,5 +55,3 @@ async function importNIST(baseFolder) {
 
   massdbConnection.close();
 }
-
-importNIST(`${__dirname}/../../data/nist/`);

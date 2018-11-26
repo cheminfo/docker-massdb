@@ -2,6 +2,8 @@
 
 const MF = require('mf-parser').MF;
 
+const topPeaks = require('../util/topPeaks.js');
+
 const parseSDF = require('./parseSDF');
 const parseMsp = require('./parseMsp');
 const parseJcamp = require('./parseJcamp');
@@ -63,6 +65,7 @@ function getEntry(molfile, msp, jcamp) {
   result.general = {
     description: msp.name,
     molfile: molfile.molfile,
+    ocl: molfile.ocl,
     name: msp.synonyms.map((synonym) => {
       return { value: synonym };
     }),
@@ -72,7 +75,14 @@ function getEntry(molfile, msp, jcamp) {
     atom: info.atoms
   };
   result.identifier = { nist: msp.nist, cas: msp.rn };
-  result.mass = { mz: msp.data.x, intensity: msp.data.y };
+
+  let peaks = topPeaks(msp.data, { limit: 20 });
+  let index = [];
+  for (let i = 0; i < peaks.x.length; i++) {
+    if (peaks.y[i] >= 10) index.push(peaks.x[i]); // values are on 1000
+  }
+
+  result.mass = { index, x: msp.data.x, y: msp.data.y };
   result.misc = { source: msp.comments };
   return result;
 }

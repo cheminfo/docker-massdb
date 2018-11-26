@@ -2,28 +2,26 @@
 
 const delay = require('delay');
 
+const join = require('path').join;
 
-const aggregate = require('../aggregates/aggregate');
+const debug = require('debug')('importLoop');
 
-const firstImport = require('./firstImport');
-const update = require('./update');
+const importFolder = require('../util/config').importFolder;
 
-let sleepTime = 24; // in hours
+const importNIST = require('./importNIST');
 
-cron();
+process.on('unhandledRejection', function (e) {
+  throw e;
+});
 
-async function cron() {
-  // waiting for mongo
-
-  // await delay(30 * 1000); // wating 30s before starting
-  await firstImport();
+async function importProcess() {
   while (true) {
-    await update();
-    await aggregate();
-    for (let i = sleepTime; i > 0; i--) {
-      console.log(`${new Date().toISOString()} - Still wating ${i}h`);
-      await delay(3600 * 1000);
-    }
+    await importNIST(join(importFolder, 'nist'));
+    debug('wating 60s');
+    await delay(60000);
   }
 }
 
+module.exports = importProcess;
+
+importProcess();
