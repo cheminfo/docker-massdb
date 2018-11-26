@@ -12,7 +12,7 @@ MassDBConnection.prototype.close = function close() {
   return undefined;
 };
 
-MassDBConnection.prototype.getMoleculesCollection = async function getDatabase() {
+MassDBConnection.prototype.getMassCollection = async function getDatabase() {
   return (await this.getDatabase()).collection('mass');
 };
 
@@ -29,24 +29,21 @@ MassDBConnection.prototype.getDatabase = async function getDatabase() {
   return this.connection.db(config.databaseName);
 };
 
-MassDBConnection.prototype.getCollection = async function getCollection(
-  collectionName
-) {
-  return (await this.getDatabase()).collection(collectionName);
-};
+MassDBConnection.prototype.getCollection =
+    async function getCollection(collectionName) {
+      return (await this.getDatabase()).collection(collectionName);
+    };
 
 MassDBConnection.prototype.init = async function init() {
   if (this.connection) return;
 
-  this.connection = await MongoClient.connect(
-    config.mongodbUrl,
-    {
-      autoReconnect: true,
-      keepAlive: true,
-      connectTimeoutMS: 6 * 60 * 60 * 1000,
-      socketTimeoutMS: 6 * 60 * 60 * 1000
-    }
-  );
+  this.connection = await MongoClient.connect(config.mongodbUrl, {
+    autoReconnect: true,
+    useNewUrlParser: true,
+    keepAlive: true,
+    connectTimeoutMS: 6 * 60 * 60 * 1000,
+    socketTimeoutMS: 6 * 60 * 60 * 1000
+  });
 };
 
 module.exports = MassDBConnection;

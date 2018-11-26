@@ -1,5 +1,0 @@
-{
-  "mongodbUrl": "mongodb://mongo:27017",
-  "databaseName": "massdb",
-  "dataFullDir": "./data/"
-}

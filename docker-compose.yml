@@ -2,6 +2,8 @@ version: '2'
 services:
   mongo:
     image: mongo:4
+    ports:
+      - 27017:27017
     restart: always
     volumes:
       - ./mongo-data:/data/db
@@ -16,7 +18,7 @@ services:
       - ./data:/git/node-massdb/data
     command: npm run cron
 
-  node-pubchem:
+  node-massdb:
     build: ./node-massdb
     #    restart: always
     ports:

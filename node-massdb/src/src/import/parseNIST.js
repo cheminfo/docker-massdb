@@ -28,23 +28,23 @@ async function parseNIST(baseFilename) {
 
 function getEntry(molfile, msp, jcamp) {
   let result = {};
-  if (msp.formula) {
-    let mf = new MF(msp.formula);
-    let info = mf.getInfo();
-    console.log(info);
-  }
+  if (!msp.formula) return result;
+
+  let mf = new MF(msp.formula);
+  let info = mf.getInfo();
   result.general = {
     description: molfile.name,
-    molfile: molfile.nolfile,
+    molfile: molfile.molfile,
     name: msp.synonyms.map((synonym) => {
       return { value: synonym };
     }),
-    mf: msp.mf,
-    mw: 0,
-    em: 0
+    mf: msp.formula,
+    mw: info.mass,
+    em: info.monoisotopicMass,
+    atom: info.atoms
   };
   result.identifier = { nist: msp.nist, cas: msp.rn };
-  result.mass = msp.data;
+  result.mass = { mz: msp.data.x, intensity: msp.data.y };
   result.misc = { source: msp.comments };
   return result;
 }
