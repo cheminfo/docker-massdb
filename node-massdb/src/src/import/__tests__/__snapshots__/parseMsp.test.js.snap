@@ -1,29 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Test Msp parsing 1`] = `
-Object {
-  "Deuterium": Object {
-    "comments": "D.HENNEBERG, MAX-PLANCK INSTITUTE, MULHEIM, WEST GERMANY",
-    "data": Object {
-      "x": Array [
-        2,
-        4,
-      ],
-      "y": Array [
-        15,
-        999,
-      ],
-    },
-    "formula": "D2",
-    "name": "Deuterium",
-    "nist": "61316",
-    "rn": "7782-39-0",
-    "synonyms": Array [
-      "D2",
-      "UN 1957",
-    ],
-  },
-  "Hydrogen": Object {
+Array [
+  Object {
     "comments": "American Petroleum Institute Research Project 44",
     "data": Object {
       "x": Array [
@@ -49,5 +28,26 @@ Object {
       "UN 1966",
     ],
   },
-}
+  Object {
+    "comments": "D.HENNEBERG, MAX-PLANCK INSTITUTE, MULHEIM, WEST GERMANY",
+    "data": Object {
+      "x": Array [
+        2,
+        4,
+      ],
+      "y": Array [
+        15,
+        999,
+      ],
+    },
+    "formula": "D2",
+    "name": "Deuterium",
+    "nist": "61316",
+    "rn": "7782-39-0",
+    "synonyms": Array [
+      "D2",
+      "UN 1957",
+    ],
+  },
+]
 `;

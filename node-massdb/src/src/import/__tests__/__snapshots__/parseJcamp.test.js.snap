@@ -1,28 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`creation of jcamp parsing 1`] = `
-Object {
-  "Deuterium": Spectrum {
-    "data": Array [
-      Object {
-        "x": Array [
-          2,
-          4,
-        ],
-        "y": Array [
-          15,
-          999,
-        ],
-      },
-    ],
-    "dataType": "MASS SPECTRUM",
-    "isPeaktable": true,
-    "nbPoints": 2,
-    "title": "Deuterium",
-    "xFactor": 1,
-    "yFactor": 1,
-  },
-  "Hydrogen": Spectrum {
+Array [
+  Spectrum {
     "data": Array [
       Object {
         "x": Array [
@@ -37,10 +17,32 @@ Object {
     ],
     "dataType": "MASS SPECTRUM",
     "isPeaktable": true,
+    "name": "Hydrogen",
     "nbPoints": 2,
     "title": "Hydrogen",
     "xFactor": 1,
     "yFactor": 1,
   },
-}
+  Spectrum {
+    "data": Array [
+      Object {
+        "x": Array [
+          2,
+          4,
+        ],
+        "y": Array [
+          15,
+          999,
+        ],
+      },
+    ],
+    "dataType": "MASS SPECTRUM",
+    "isPeaktable": true,
+    "name": "Deuterium",
+    "nbPoints": 2,
+    "title": "Deuterium",
+    "xFactor": 1,
+    "yFactor": 1,
+  },
+]
 `;

@@ -1,20 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`test SDF parsing 1`] = `
-Object {
-  "Deuterium": Object {
-    "molfile": "Deuterium
-  -NISTMS-12099911132D 1   1.0         0.0          
-
-  2  1  0  0  0  0  0  0  0  0  0
-   -0.4060    0.6090    0.0000 H   1  0  0     0  0  0  0  0  0
-    0.4060    0.6090    0.0000 H   1  0  0     0  0  0  0  0  0
-  1  2  1  0  0  0  0
-$$$$
-",
-    "name": "Deuterium",
-  },
-  "Hydrogen": Object {
+Array [
+  Object {
     "molfile": "Hydrogen
   -NISTMS-12099911132D 1   1.0         0.0          
 
@@ -26,5 +14,17 @@ $$$$
 ",
     "name": "Hydrogen",
   },
-}
+  Object {
+    "molfile": "Deuterium
+  -NISTMS-12099911132D 1   1.0         0.0          
+
+  2  1  0  0  0  0  0  0  0  0  0
+   -0.4060    0.6090    0.0000 H   1  0  0     0  0  0  0  0  0
+    0.4060    0.6090    0.0000 H   1  0  0     0  0  0  0  0  0
+  1  2  1  0  0  0  0
+$$$$
+",
+    "name": "Deuterium",
+  },
+]
 `;

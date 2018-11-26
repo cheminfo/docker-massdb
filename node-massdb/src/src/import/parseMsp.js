@@ -2,6 +2,7 @@
 
 const fs = require('fs-extra');
 const bufferSplit = require('buffer-split');
+const debug = require('debug')('parseMsp');
 
 const fieldMapping = {
   'num peaks': '',
@@ -14,11 +15,20 @@ const fieldMapping = {
 async function parseMsp(src) {
   let split = new Buffer.from('\r\n\r\n');
   let msps = bufferSplit(await fs.readFile(src), split, true);
-  let results = {};
-  for (let mspBuffer of msps) {
+  let results = [];
+  for (let i = 0; i < msps.length; i++) {
+    let mspBuffer = msps[i];
+    if (i % 10000 === 0) debug(`parseMsp: ${i}/${msps.length}`);
     let msp = mspBuffer.toString();
+    msp = msp.replace(/\.\+\/-\./g, '±');
+    msp = msp.replace(/β/g, 'ß');
+    msp = msp.replace(/η/g, 'ⁿ');
+    msp = msp.replace(/μ/g, 'µ');
+
     let result = processMsp(msp);
-    if (result.name) results[result.name] = result;
+    if (result.name) {
+      results.push(result);
+    }
   }
   return results;
 }

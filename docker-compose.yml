@@ -15,7 +15,7 @@ services:
     depends_on:
       - mongo
     volumes:
-      - ./data:/git/node-massdb/data
+      - ./data:/data
     command: npm run cron
 
   node-massdb:

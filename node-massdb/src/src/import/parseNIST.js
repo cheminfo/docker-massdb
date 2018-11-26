@@ -6,18 +6,46 @@ const parseSDF = require('./parseSDF');
 const parseMsp = require('./parseMsp');
 const parseJcamp = require('./parseJcamp');
 
+const debug = require('debug')('parseNIST');
+
 async function parseNIST(baseFilename) {
   let results = [];
   let molfiles = await parseSDF(`${baseFilename}.sdf`);
   let msps = await parseMsp(`${baseFilename}.msp`);
   let jcamps = await parseJcamp(`${baseFilename}.jdx`);
-  for (let key of Object.keys(molfiles)) {
-    let molfile = molfiles[key];
-    let msp = msps[key];
-    let jcamp = jcamps[key];
+  let followingBads = 0;
+  for (let i = 0; i < msps.length; i++) {
+    if (i % 10000 === 0) debug(`parseNIST: ${i}/${msps.length}`);
+    let molfile = molfiles[i];
+    let msp = msps[i];
+    let jcamp = jcamps[i];
+
     if (!molfile || !msp || !jcamp) {
-      console.log(`Missing information for: ${key}`);
+      debug(`Missing information for: ${molfile.name}`);
     } else {
+      let molfileName = molfile.name
+        .toLowerCase()
+        .replace(/[^0-9a-z]/g, '')
+        .substring(0, 20);
+      let mspName = msp.name
+        .toLowerCase()
+        .replace(/[^0-9a-z]/g, '')
+        .substring(0, 20);
+      let jcampName = jcamp.name
+        .toLowerCase()
+        .replace(/[^0-9a-z]/g, '')
+        .substring(0, 20);
+
+      if (molfileName !== mspName || molfileName !== jcampName) {
+        // debug(`Names do not match: ${molfileName} ${mspName}  ${jcampName} `);
+        followingBads++;
+        if (followingBads > 500) {
+          throw new Error('too many consecutive bad name match');
+        }
+      } else {
+        followingBads = 0;
+      }
+
       let entry = getEntry(molfile, msp, jcamp);
       results.push(entry);
     }
@@ -33,7 +61,7 @@ function getEntry(molfile, msp, jcamp) {
   let mf = new MF(msp.formula);
   let info = mf.getInfo();
   result.general = {
-    description: molfile.name,
+    description: msp.name,
     molfile: molfile.molfile,
     name: msp.synonyms.map((synonym) => {
       return { value: synonym };

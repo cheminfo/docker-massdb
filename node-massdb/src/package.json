@@ -24,6 +24,7 @@
   "homepage": "https://github.com/cheminfo/docker-massdb#readme",
   "dependencies": {
     "buffer-split": "^1.0.0",
+    "debug": "^4.1.0",
     "delay": "^3.0.0",
     "fs-extra": "^6.0.1",
     "jcampconverter": "^2.10.2",
