@@ -2,6 +2,7 @@
 
 // query for molecules from monoisotopic mass
 const massdbConnection = new (require('../../util/MassDBConnection'))();
+const massSimilarity = require('../../util/arrayxy/massSimilarity');
 
 const parse = require('mf-parser').parse;
 
@@ -11,25 +12,30 @@ const parse = require('mf-parser').parse;
  * @param {object} [options.limit=1000]
  * @param {Array} [options.mz=[]]
  * @param {Array} [options.intensity=[]]
- *  @param {Array} [options.minMass=0]
- *  @param {Array} [options.maxMass=+Infinity]
+ * @param {Array} [options.minMass=0]
+ * @param {Array} [options.maxMass=+Infinity]
  * @return {Array}
  */
 module.exports = async function mass(options = {}) {
   let {
     limit = 1e3,
     mf = '',
-    mz = [],
-    intensity = [],
+    mz = '',
+    intensity = '',
     minMass = 0,
     maxMass = +Infinity
   } = options;
   if (limit > 1e4) limit = 1e4;
   if (limit < 1) limit = 1;
+
   let mzArray = mz
+    .trim()
     .split(/[\t\r\n,; ]+/)
-    .map((value) => Number(value))
-    .filter((value) => value > 0);
+    .map((value) => Number(value));
+  let intensityArray = intensity
+    .trim()
+    .split(/[\t\r\n,; ]+/)
+    .map((value) => Number(value));
 
   const collection = await massdbConnection.getMassCollection();
 
@@ -63,22 +69,34 @@ module.exports = async function mass(options = {}) {
       }
     }
   }
-  if (mz) {
+  if (mzArray.length > 0) {
     match['mass.x'] = { $all: mzArray };
     project['mass.y'] = 1;
     project['mass.x'] = 1;
   }
   let results = await collection
     .aggregate([
-      {
-        $match: match
-      },
+      { $match: match },
       { $limit: Number(limit) },
       { $project: project }
     ])
     .toArray();
 
-  return results.length;
-};
+  if (intensityArray.length > 0) {
+    // need to calculate similarity
+    for (let result of results) {
+      result.similarity = massSimilarity(
+        { x: mzArray, y: intensityArray },
+        result.mass,
+        {
+          maxNumberPeaks: 6,
+          intensityPower: 0.6,
+          massPower: 3,
+          slotsPerUnit: 1
+        }
+      );
+    }
+  }
 
-function calculateDistance(target, source) {}
+  return results;
+};

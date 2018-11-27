@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/cheminfo/docker-massdb#readme",
   "dependencies": {
+    "array-xy-max-y": "^0.1.0",
     "buffer-split": "^1.0.0",
     "convert-to-jcamp": "^1.1.3",
     "debug": "^4.1.0",
@@ -36,6 +37,8 @@
     "md2html-plus": "^1.0.1",
     "mf-parser": "^0.7.0",
     "mkdirp": "^0.5.1",
+    "ml-array-median": "^1.1.1",
+    "ml-array-normed": "^1.0.2",
     "mongodb": "^3.1.1",
     "openchemlib-extended": "^3.2.0",
     "sdf-parser": "^3.1.0"
