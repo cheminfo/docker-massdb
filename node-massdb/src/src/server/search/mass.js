@@ -10,8 +10,8 @@ const parse = require('mf-parser').parse;
  * Find molecular formula from a monoisotopic mass
  * @param {object} [options={}]
  * @param {object} [options.limit=1000]
- * @param {Array} [options.mz=[]]
- * @param {Array} [options.intensity=[]]
+ * @param {Array} [options.mz=''] - comma separated list of mass
+ * @param {Array} [options.intensity=''] - Comma separated list of intensity
  * @param {Array} [options.minMass=0]
  * @param {Array} [options.maxMass=+Infinity]
  * @return {Array}
@@ -28,14 +28,9 @@ module.exports = async function mass(options = {}) {
   if (limit > 1e4) limit = 1e4;
   if (limit < 1) limit = 1;
 
-  let mzArray = mz
-    .trim()
-    .split(/[\t\r\n,; ]+/)
-    .map((value) => Number(value));
-  let intensityArray = intensity
-    .trim()
-    .split(/[\t\r\n,; ]+/)
-    .map((value) => Number(value));
+  let mzArray = mz.trim().split(/[\t\r\n,; ]+/).map((value) => Number(value));
+  let intensityArray =
+      intensity.trim().split(/[\t\r\n,; ]+/).map((value) => Number(value));
 
   const collection = await massdbConnection.getMassCollection();
 
@@ -74,27 +69,22 @@ module.exports = async function mass(options = {}) {
     project['mass.y'] = 1;
     project['mass.x'] = 1;
   }
-  let results = await collection
-    .aggregate([
-      { $match: match },
-      { $limit: Number(limit) },
-      { $project: project }
-    ])
-    .toArray();
+  let results =
+      await collection
+        .aggregate(
+          [{ $match: match }, { $limit: Number(limit) }, { $project: project }])
+        .toArray();
 
   if (intensityArray.length > 0) {
     // need to calculate similarity
     for (let result of results) {
-      result.similarity = massSimilarity(
-        { x: mzArray, y: intensityArray },
-        result.mass,
-        {
-          maxNumberPeaks: 6,
-          intensityPower: 0.6,
-          massPower: 3,
-          slotsPerUnit: 1
-        }
-      );
+      result.similarity =
+          massSimilarity({ x: mzArray, y: intensityArray }, result.mass, {
+            maxNumberPeaks: 6,
+            intensityPower: 0.6,
+            massPower: 3,
+            slotsPerUnit: 1
+          });
     }
   }
 
