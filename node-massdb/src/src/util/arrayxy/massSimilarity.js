@@ -45,13 +45,12 @@ function massSimilarity(xy1, xy2, options = {}) {
     xy1 = thresholdYFilter(xy1, { threshold: thresholdFilter });
     xy2 = thresholdYFilter(xy2, { threshold: thresholdFilter });
   }
-
   if (maxNumberPeaks < Number.MAX_VALUE) {
     xy1 = topY(xy1, { limit: maxNumberPeaks });
     xy2 = topY(xy2, { limit: maxNumberPeaks });
   }
-
   // we prepare the data based on massPower and intensityPower
+
   xy1 = {
     x: xy1.x.map((value) => Math.pow(value, massPower)),
     y: xy1.y.map((value) => Math.pow(value, intensityPower))
@@ -64,9 +63,8 @@ function massSimilarity(xy1, xy2, options = {}) {
 
   xy1 = normedY(xy1);
   xy2 = normedY(xy2);
-
-
-  return cosine(xy1, xy2);
+  let similarity = cosine(xy1, xy2);
+  return similarity;
 }
 
 module.exports = massSimilarity;

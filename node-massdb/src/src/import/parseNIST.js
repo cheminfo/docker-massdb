@@ -2,7 +2,7 @@
 
 const MF = require('mf-parser').MF;
 
-const topPeaks = require('../util/topPeaks.js');
+const topY = require('../util/arrayxy/topY.js');
 
 const parseSDF = require('./parseSDF');
 const parseMsp = require('./parseMsp');
@@ -76,10 +76,10 @@ function getEntry(molfile, msp, jcamp) {
   };
   result.identifier = { nist: msp.nist, cas: msp.rn };
 
-  let peaks = topPeaks(msp.data, { limit: 20 });
+  let peaks = topY(msp.data, { limit: 20 });
   let index = [];
   for (let i = 0; i < peaks.x.length; i++) {
-    if (peaks.y[i] >= 10) index.push(peaks.x[i]); // values are on 1000
+    if (peaks.y[i] >= 10) index.push(peaks.x[i]); // values are on 1000 so at least 1%
   }
 
   result.mass = { index, x: msp.data.x, y: msp.data.y };

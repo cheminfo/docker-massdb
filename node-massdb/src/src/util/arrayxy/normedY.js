@@ -8,7 +8,7 @@ const arrayNormed = require('ml-array-normed');
  * @return {object} - New object
  */
 function normedY(xy) {
-  return { x: xy.y, y: arrayNormed(xy.y) };
+  return { x: xy.x, y: arrayNormed(xy.y) };
 }
 
 module.exports = normedY;

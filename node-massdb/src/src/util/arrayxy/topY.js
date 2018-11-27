@@ -19,7 +19,7 @@ function topY(xyArray, options = {}) {
   }
 
   points.sort((a, b) => b.y - a.y);
-  points.length = limit;
+  if (limit < points.length) points.length = limit;
   points.sort((a, b) => a.x - b.x);
   return { x: points.map((p) => p.x), y: points.map((p) => p.y) };
 }
