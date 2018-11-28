@@ -8,6 +8,8 @@ const thresoldY = require('../../util/arrayxy/thresholdYFilter');
 
 const parse = require('mf-parser').parse;
 
+let moleculeDB;
+
 /**
  * Find molecular formula from a monoisotopic mass
  * @param {object} [options={}]
@@ -30,10 +32,15 @@ module.exports = async function mass(options = {}) {
     intensity = '',
     minMass = 0,
     maxMass = +Infinity,
-    minSimilarity = 0.5
+    minSimilarity = 0.5,
+    idCode = ''
   } = options;
   if (limit > 1e4) limit = 1e4;
   if (limit < 1) limit = 1;
+
+  if (!moleculeDB) {
+    moleculeDB = await require('../../util/createMoleculeDatabase')();
+  }
 
   let mzArray = mz
     ? mz
@@ -105,8 +112,10 @@ module.exports = async function mass(options = {}) {
       match['mass.index'] = { $all: mzArray };
     }
   }
-
-  //  console.log(project);
+  if (idCode) {
+    let result = moleculeDB.search(idCode).map((entry) => entry.data._id);
+    match._id = { $in: result };
+  }
 
   let results = await collection
     .aggregate([
@@ -134,8 +143,9 @@ module.exports = async function mass(options = {}) {
       results = results.filter((result) => result.similarity >= minSimilarity);
     }
     results.sort((a, b) => b.similarity - a.similarity);
-    results = results.slice(0, limit);
+  } else {
+    results.sort((a, b) => a.general.em - b.general.em);
   }
-
+  results = results.slice(0, limit);
   return results;
 };

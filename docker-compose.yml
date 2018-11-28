@@ -10,7 +10,7 @@ services:
 
   node-massdb-import:
     build: ./node-massdb
-    #    restart: always
+    restart: always
     privileged: true
     depends_on:
       - mongo
@@ -20,8 +20,10 @@ services:
 
   node-massdb:
     build: ./node-massdb
-    #    restart: always
+    restart: always
     ports:
       - 3001:80
     depends_on:
       - mongo
+    env:
+      - DEBUG=*

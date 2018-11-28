@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "convert-readme": " md2html -w ../../README.md; mkdir -p src/server/staticPages; mv ../../README.html src/server/staticPages/index.html",
+    "convert-readme": "md2html -w ../../README.md; mkdir -p src/server/staticPages; mv ../../README.html src/server/staticPages/index.html",
     "cron": "node src/sync/cron.js",
     "test": "jest",
-    "server": "npm run convert-readme; node src/server/index.js --port 80",
-    "server8080": "npm run convert-readme; node src/server/index.js --port 8080",
+    "server": "npm run convert-readme; node --max-old-space-size=4096 src/server/index.js --port 80",
+    "server12345": "npm run convert-readme; node --max-old-space-size=4096 src/server/index.js --port 12345",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix"
   },
@@ -41,7 +41,7 @@
     "ml-array-median": "^1.1.1",
     "ml-array-normed": "^1.0.2",
     "mongodb": "^3.1.1",
-    "openchemlib-extended": "^3.2.0",
+    "openchemlib-extended": "^4.0.0",
     "sdf-parser": "^3.1.0"
   },
   "devDependencies": {
