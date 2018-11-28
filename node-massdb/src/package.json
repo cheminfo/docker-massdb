@@ -7,8 +7,8 @@
     "convert-readme": "md2html -w ../../README.md; mkdir -p src/server/staticPages; mv ../../README.html src/server/staticPages/index.html",
     "cron": "node src/sync/cron.js",
     "test": "jest",
-    "server": "npm run convert-readme; node --max-old-space-size=4096 src/server/index.js --port 80",
-    "server12345": "npm run convert-readme; node --max-old-space-size=4096 src/server/index.js --port 12345",
+    "server": "npm run convert-readme; node --max-old-space-size=2048 src/server/index.js --port 80",
+    "server12345": "npm run convert-readme; DEBUG=* node --max-old-space-size=2048 src/server/index.js --port 12345",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix"
   },

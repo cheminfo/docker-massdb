@@ -6,6 +6,7 @@ const massSimilarity = require('../../util/arrayxy/massSimilarity');
 const topY = require('../../util/arrayxy/topY');
 const thresoldY = require('../../util/arrayxy/thresholdYFilter');
 
+const debug = require('debug')('search-mass');
 const parse = require('mf-parser').parse;
 
 let moleculeDB;
@@ -42,18 +43,11 @@ module.exports = async function mass(options = {}) {
     moleculeDB = await require('../../util/createMoleculeDatabase')();
   }
 
-  let mzArray = mz
-    ? mz
-      .trim()
-      .split(/[\t\r\n,; ]+/)
-      .map((value) => Number(value))
-    : [];
-  let intensityArray = intensity
-    ? intensity
-      .trim()
-      .split(/[\t\r\n,; ]+/)
-      .map((value) => Number(value))
-    : [];
+  let mzArray =
+      mz ? mz.trim().split(/[\t\r\n,; ]+/).map((value) => Number(value)) : [];
+  let intensityArray = intensity ?
+      intensity.trim().split(/[\t\r\n,; ]+/).map((value) => Number(value)) :
+      [];
 
   const collection = await massdbConnection.getMassCollection();
 
@@ -66,7 +60,7 @@ module.exports = async function mass(options = {}) {
   };
   let match = {};
   if (minMass > 0 || maxMass < +Infinity) {
-    match['general.em'] = { $gte: Number(minMass), $lte: Number(maxMass) };
+    match['general.em'] = {$gte: Number(minMass), $lte: Number(maxMass)};
   }
   if (mf) {
     let parsed = parse(mf);
@@ -88,7 +82,7 @@ module.exports = async function mass(options = {}) {
         case 'multiplier':
           if (atom) {
             if (item.value === 0) {
-              match[`general.atom.${atom}`] = { $exists: false };
+              match[`general.atom.${atom}`] = {$exists: false};
             } else {
               match[`general.atom.${atom}`] = item.value;
             }
@@ -105,39 +99,37 @@ module.exports = async function mass(options = {}) {
   if (mzArray.length > 0) {
     // need to take only the 5 best ones if intensity is available
     if (intensityArray.length > 0) {
-      let xy = topY({ x: mzArray, y: intensityArray }, { limit: 5 });
-      xy = thresoldY(xy, { threshold: 0.1 });
-      match['mass.index'] = { $all: xy.x };
+      let xy = topY({x: mzArray, y: intensityArray}, {limit: 5});
+      xy = thresoldY(xy, {threshold: 0.1});
+      match['mass.index'] = {$all: xy.x};
     } else {
-      match['mass.index'] = { $all: mzArray };
+      match['mass.index'] = {$all: mzArray};
     }
   }
   if (idCode) {
+    debug(`idCode: ${idCode}`);
     let result = moleculeDB.search(idCode).map((entry) => entry.data._id);
-    match._id = { $in: result };
+    match._id = {$in: result};
   }
-
-  let results = await collection
-    .aggregate([
-      { $match: match },
-      { $limit: mzArray.length > 0 ? 1e6 : Number(limit) },
-      { $project: project }
-    ])
-    .toArray();
-
+  debug('Starting search');
+  let results =
+      await collection
+          .aggregate([
+            {$match: match}, {$limit: mzArray.length > 0 ? 1e6 : Number(limit)},
+            {$project: project}
+          ])
+          .toArray();
+  debug('Finished search');
   if (intensityArray.length > 0) {
     // need to calculate similarity
     for (let result of results) {
-      result.similarity = massSimilarity(
-        { x: mzArray, y: intensityArray },
-        result.mass,
-        {
-          maxNumberPeaks: 5,
-          intensityPower: 0.6,
-          massPower: 3,
-          slotsPerUnit: 1
-        }
-      );
+      result.similarity =
+          massSimilarity({x: mzArray, y: intensityArray}, result.mass, {
+            maxNumberPeaks: 5,
+            intensityPower: 0.6,
+            massPower: 3,
+            slotsPerUnit: 1
+          });
     }
     if (minSimilarity) {
       results = results.filter((result) => result.similarity >= minSimilarity);
@@ -147,5 +139,6 @@ module.exports = async function mass(options = {}) {
     results.sort((a, b) => a.general.em - b.general.em);
   }
   results = results.slice(0, limit);
+  debug('Got sorted results');
   return results;
 };

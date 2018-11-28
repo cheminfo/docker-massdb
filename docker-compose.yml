@@ -25,5 +25,3 @@ services:
       - 3001:80
     depends_on:
       - mongo
-    env:
-      - DEBUG=*
