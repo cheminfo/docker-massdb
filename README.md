@@ -6,14 +6,5 @@ docker-compose up --build -d
 
 ```
 
-## API
+[Check the API](node-massdb/src/README.md)
 
-### /search/mass?
-
-/search/mass?minMass=400&maxMass=401
-
-/search/mass?minMass=400&maxMass=401&mf=C1-10O5-10
-
-### /jcamp/{id}
-
-### /json/{id}

@@ -1,12 +1,13 @@
 {
   "name": "node-massdb",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node project to manage a mass spectra database",
   "main": "index.js",
   "scripts": {
-    "convert-readme": "md2html -w ../../README.md; mkdir -p src/server/staticPages; mv ../../README.html src/server/staticPages/index.html",
-    "cron": "node src/sync/cron.js",
+    "convert-readme": "md2html -w ./README.md; mkdir -p src/server/staticPages; mv ./README.html src/server/staticPages/index.html",
+    "cron": "node src/import/cron.js",
     "test": "jest",
+    "start": "npm run server",
     "server": "npm run convert-readme; node --max-old-space-size=2048 src/server/index.js --port 80",
     "server12345": "npm run convert-readme; DEBUG=* node --max-old-space-size=2048 src/server/index.js --port 12345",
     "eslint": "eslint src",

@@ -2,26 +2,28 @@ version: '2'
 services:
   mongo:
     image: mongo:4
-    ports:
-      - 27017:27017
+#    ports:
+#      - 27017:27017
     restart: always
     volumes:
       - ./mongo-data:/data/db
 
-  node-massdb-import:
+  massdb-import:
     build: ./node-massdb
     restart: always
     privileged: true
+    environment:
+      - DEBUG=*
     depends_on:
       - mongo
     volumes:
       - ./data:/data
     command: npm run cron
 
-  node-massdb:
+  massdb:
     build: ./node-massdb
     restart: always
     ports:
-      - 3001:80
+      - 12345:80
     depends_on:
       - mongo

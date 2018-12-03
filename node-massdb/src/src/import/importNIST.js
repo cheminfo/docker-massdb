@@ -16,6 +16,9 @@ async function importNIST(baseFolder) {
   const collection = await massdbConnection.getMassCollection();
 
   const sourceDir = join(baseFolder, 'to_process');
+
+  if (!fs.pathExistsSync(sourceDir)) return;
+
   const dir = await fs.readdir(sourceDir);
   const keys = {};
   debug(`checking directory: ${sourceDir}`);
