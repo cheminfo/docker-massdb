@@ -1,0 +1,12 @@
+
+{
+    "lockView": false,
+    "contextMenu": ["fullscreen", "export", "print", "utils","utils"],
+    "usrDir": "usr",
+    "debugLevel": 0,
+    "filters": [],
+    "modules": {
+      "folders": ["modules/types"]
+    },
+    "header": false
+  }

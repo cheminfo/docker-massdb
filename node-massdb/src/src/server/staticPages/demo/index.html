@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Mass DB demo</title>
+</head>
+<body>
+
+    <div id="ci-visualizer" data-ci-config="config.json" data-ci-view="view.json"></div>
+
+    <script>
+        function loadVisualizer() {
+            let cdn = 'https://www.lactame.com';
+            let version = 'latest';
+            let prefix = cdn + '/visualizer/';
+            let visualizer = document.createElement('script');
+            visualizer.setAttribute('data-main', prefix + version + '/init');
+            visualizer.setAttribute('src', prefix + version + '/components/requirejs/require.js');
+            document.head.appendChild(visualizer);
+        }
+        loadVisualizer();
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,1854 @@
+{
+  "version": "2.101.0",
+  "grid": {
+    "layers": {
+      "Default layer": {
+        "name": "Default layer"
+      },
+      "Form": {
+        "name": "Form"
+      },
+      "Admin": {
+        "name": "Admin"
+      }
+    },
+    "xWidth": 10,
+    "yHeight": 10
+  },
+  "modules": [
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "asyncAwait": [
+                [
+                  "top"
+                ]
+              ],
+              "script": [
+                "let action=this.action.name;\nlet value=this.action.value;\n\n\nconst parse=(await API.require('https://www.lactame.com//lib/xy-parser/2.2.2/xy-parser.js')).parseXY;\nlet spectrum=parse(value.mass,{arrayType:'xxyy'});\n\nconsole.log(action);\n\nswitch (action) {\n    case 'changed':\n        change(value, spectrum);\n        break;\n    case 'submitted':\n        submit(value, spectrum);\n        break;\n}\n\nasync function change(value, spectrum) {\n    // we recreate the experimental spectrum\n    API.createData('experimental', {\n        x:spectrum[0],\n        y:spectrum[1]\n    });\n}\n\nasync function submit(value, spectrum) {\n    let idCode=String(API.getData('idCode').value);\n    console.log(idCode);\n    const params=[];\n    if (value.minMass) params.push('minMass='+encodeURIComponent(value.minMass));\n    if (value.maxMass) params.push('maxMass='+encodeURIComponent(value.maxMass));\n    if (value.mf) params.push('mf='+encodeURIComponent(value.mf));\n    if (value.limit) params.push('limit='+encodeURIComponent(value.limit));\n    if (value.minSimilarity) params.push('minSimilarity='+encodeURIComponent(value.minSimilarity));\n\n    if (spectrum[0].length>0) {\n        params.push('mz='+encodeURIComponent(spectrum[0].join(',')));\n        params.push('intensity='+encodeURIComponent(spectrum[0].join(',')));\n    }\n\n    if (idCode) params.push('idCode='+encodeURIComponent(idCode));\n    \n    let url='/search/mass?'+params.join('&');\n\n    \n    UI.progress('searching', 'Searching ...');\n    let response=await fetch(url);\n    let results=await response.json();\n    UI.stopProgress('searching');\n    API.createData('results', results);\n}\n\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "src/util/ui",
+                "alias": "UI"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute",
+                "hide": [],
+                "disable": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 57,
+            "height": 30
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 57,
+            "height": 30
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 43,
+            "top": 0
+          },
+          "size": {
+            "width": 57,
+            "height": 57
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 1,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {
+          "rel": "execute",
+          "name": "submitted"
+        },
+        {
+          "rel": "execute",
+          "name": "changed"
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll",
+                  "forgetLastActive",
+                  "editable"
+                ]
+              ],
+              "copyPaste": [
+                []
+              ],
+              "copyPasteOptions": [
+                [
+                  "newRows"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                "80"
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/46b40ca86345f8fa313563bf9c6ecb80ba323101/src/modules/types/edition/slick_grid/view.js#L1695-L1735"
+              ],
+              "customJpaths": [
+                "_id"
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "ID",
+                "jpath": [
+                  "_id"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "copyFormatter": "default",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 74,
+                "hideColumn": []
+              },
+              {
+                "name": "Structure",
+                "jpath": [
+                  "general",
+                  "ocl",
+                  "idCode"
+                ],
+                "editor": "none",
+                "forceType": "oclid",
+                "formatter": "typerenderer",
+                "copyFormatter": "default",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 179,
+                "hideColumn": []
+              },
+              {
+                "name": "MF",
+                "jpath": [
+                  "general",
+                  "mf"
+                ],
+                "editor": "none",
+                "forceType": "mf",
+                "formatter": "typerenderer",
+                "copyFormatter": "default",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 66,
+                "hideColumn": []
+              },
+              {
+                "name": "em",
+                "jpath": [
+                  "general",
+                  "em"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "copyFormatter": "default",
+                "visibility": "both",
+                "rendererOptions": "numeral:'0.0000'",
+                "editorOptions": "",
+                "hideColumn": []
+              },
+              {
+                "name": "Similarity",
+                "jpath": [
+                  "similarity"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "copyFormatter": "default",
+                "visibility": "both",
+                "rendererOptions": "numeral:'0.00%'",
+                "editorOptions": "",
+                "width": 71,
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  0
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 38,
+            "top": 7
+          },
+          "size": {
+            "width": 48,
+            "height": 73
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "List of results",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 58,
+            "top": 5
+          },
+          "size": {
+            "width": 40,
+            "height": 25
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "List of results",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 58,
+            "top": 5
+          },
+          "size": {
+            "width": 40,
+            "height": 25
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "List of results",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 2,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "filteredResults"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "event": "onRowActive",
+          "rel": "row",
+          "jpath": [
+            "mass"
+          ],
+          "name": "mass"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              []
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "List of results"
+    },
+    {
+      "url": "modules/types/science/spectra/spectra_displayer/",
+      "configuration": {
+        "sections": {
+          "graph": [
+            {
+              "sections": {},
+              "groups": {
+                "graph": [
+                  {
+                    "url": [
+                      ""
+                    ],
+                    "zoom": [
+                      "x"
+                    ],
+                    "wheelAction": [
+                      "zoomY"
+                    ],
+                    "wheelbaseline": [
+                      0
+                    ],
+                    "fullOut": [
+                      "both"
+                    ],
+                    "legend": [
+                      "bottom"
+                    ],
+                    "legendOptions": [
+                      [
+                        "isSerieHideable",
+                        "isSerieSelectable"
+                      ]
+                    ],
+                    "mouseTracking": [
+                      []
+                    ],
+                    "selectScatter": [
+                      []
+                    ],
+                    "independantYZoom": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "axis": [
+            {
+              "sections": {},
+              "groups": {
+                "xAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      ""
+                    ],
+                    "beforeSpacing": [
+                      "0.1"
+                    ],
+                    "afterSpacing": [
+                      "0.1"
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "axismodification": [
+                      "none"
+                    ]
+                  }
+                ],
+                "yAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      ""
+                    ],
+                    "beforeSpacing": [
+                      "0"
+                    ],
+                    "afterSpacing": [
+                      0
+                    ],
+                    "min": [
+                      "0"
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "fitToAxisOnFromTo": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "series": [
+            {
+              "sections": {},
+              "groups": {
+                "series": [
+                  {
+                    "overflow": [
+                      []
+                    ],
+                    "stackVerticalSpacing": [
+                      0
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "variables": [
+            {
+              "sections": {},
+              "groups": {
+                "variables": [
+                  [
+                    {
+                      "variable": "mass",
+                      "axis": "0",
+                      "adaptTo": "none",
+                      "plotcolor": [
+                        1,
+                        1,
+                        255,
+                        1
+                      ],
+                      "strokewidth": "1",
+                      "strokestyle": "1",
+                      "plotcontinuous": "discrete",
+                      "peakpicking": [
+                        "picking"
+                      ],
+                      "markers": [],
+                      "markerShape": "1",
+                      "markerSize": 2,
+                      "normalize": "max100",
+                      "optimizeSlots": [],
+                      "tracking": []
+                    },
+                    {
+                      "variable": "experimental",
+                      "axis": "0",
+                      "adaptTo": "none",
+                      "plotcolor": [
+                        255,
+                        1,
+                        11,
+                        0.26
+                      ],
+                      "strokewidth": "3",
+                      "strokestyle": "1",
+                      "plotcontinuous": "discrete",
+                      "peakpicking": [],
+                      "markers": [],
+                      "markerShape": "1",
+                      "markerSize": 2,
+                      "normalize": "max100",
+                      "optimizeSlots": [],
+                      "tracking": []
+                    }
+                  ]
+                ]
+              }
+            }
+          ],
+          "misc": [
+            {
+              "sections": {},
+              "groups": {
+                "misc": [
+                  {
+                    "highlightOptions": [
+                      "{}"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {}
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 87,
+            "top": 0
+          },
+          "size": {
+            "width": 59,
+            "height": 43
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 58,
+            "top": 31
+          },
+          "size": {
+            "width": 53,
+            "height": 28
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 58,
+            "top": 31
+          },
+          "size": {
+            "width": 53,
+            "height": 28
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 3,
+      "vars_in": [
+        {
+          "rel": "chart",
+          "name": "mass"
+        },
+        {
+          "rel": "chart",
+          "name": "experimental"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Show fullscreen"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/array_search/smart_array_filter/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "debounce": [
+                100
+              ],
+              "limit": [
+                0
+              ],
+              "initialValue": [
+                ""
+              ],
+              "placeholder": [
+                "Filter result"
+              ],
+              "fontSize": [
+                20
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 39,
+            "top": 2
+          },
+          "size": {
+            "width": 40,
+            "height": 6
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 57,
+            "top": 0
+          },
+          "size": {
+            "width": 40,
+            "height": 6
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 57,
+            "top": 0
+          },
+          "size": {
+            "width": 40,
+            "height": 6
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 4,
+      "vars_in": [
+        {
+          "rel": "input",
+          "name": "results"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "event": "onQuery",
+          "rel": "output",
+          "jpath": [],
+          "name": "filteredResults"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              []
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/display/template-twig/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "selectable": [
+                []
+              ],
+              "template": [
+                ""
+              ],
+              "modifyInForm": [
+                [
+                  "yes"
+                ]
+              ],
+              "debouncing": [
+                200
+              ],
+              "formOptions": [
+                []
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 37,
+            "height": 37
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 36,
+            "height": 45
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Form"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 40,
+            "height": 39
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Form"
+        }
+      },
+      "id": 5,
+      "vars_in": [
+        {
+          "rel": "tpl",
+          "name": "twigTemplate"
+        },
+        {
+          "rel": "form",
+          "name": "data"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "event": "onFormChanged",
+          "rel": "form",
+          "jpath": [],
+          "name": "changed"
+        },
+        {
+          "event": "onFormSubmitted",
+          "rel": "form",
+          "jpath": [],
+          "name": "submitted"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              []
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "html"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                [
+                  "button"
+                ]
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                "<style>\n    #twigForm {\n        padding-top: 10px;\n        padding-bottom: 10px;\n        background: #eeeeee;\n        align: center;\n        padding: 10px;\n    }\n    #twigForm th, #twigForm td {\n        padding-top: 5px;\n        padding-bottom: 2px;\n        text-align: left;\n        vertical-align: top;\n    }\n    #twigForm .explanation {\n        font-size: 0.8em;\n        font-weight: normal;\n    }\n    #twigForm textarea {\n        font-size: 0.8em;\n    }\n</style>\n\n<div id='twigForm'>\n    <form>\n        <center>\n            <h1>Search mass spectra database</h1>\n            <table>\n                <tr>\n                    <th>Min mass:</th>\n                    <td><input type='number' name='minMass' value='0'></td>\n                </tr>\n                <tr>\n                    <th>Max mass:</th>\n                    <td><input type='number' name='maxMass' value='9999'></td>\n                </tr>\n                <tr>\n                    <th>Maximal number of results:</th>\n                    <td><input type='number' name='limit' value='200'></td>\n                </tr>\n                <tr>\n                    <th>\n                        MF range:\n                        <div class='explanation'>\n                            You can enter a MF range like <br>'C0-10 H0-20 O0-4 N0 Cl0'\n                        </div>\n                    </th>\n                    <td><input type='text' name='mf'></td>\n                </tr>\n                <tr>\n                    <th>\n                        Experimental mass spectrum:\n                        <div class='explanation'>\n                            2 columns: m/z and intensity\n                        </div>\n                    </th>\n                    <td>\n                        <textarea name='mass' cols=30 rows=10></textarea>\n                    </td>\n                </tr>\n                <tr>\n                    <th>\n                        Minimum similarity:\n                        <div class='explanation'>\n                            Only used for mass search\n                        </div>\n                    </th>\n                    <td><input type='number' step=0.01 name='minSimilarity'></td>\n                </tr>\n            </table>\n       \n            <br>\n            <input type='hidden' name='idCode' value=''>\n            <input type='submit' value='Search'>\n        </center>\n        \n    </form>\n</div>\n"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 47,
+            "top": 0
+          },
+          "size": {
+            "width": 67,
+            "height": 44
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Form"
+        },
+        "Admin": {
+          "position": {
+            "left": 66,
+            "top": 4
+          },
+          "size": {
+            "width": 67,
+            "height": 44
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Form"
+        }
+      },
+      "id": 6,
+      "vars_in": [
+        {
+          "rel": "data",
+          "name": ""
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onEditorChange",
+          "rel": "data",
+          "jpath": [],
+          "name": "twigTemplate"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/science/chemistry/ocl_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "prefs": [
+                [
+                  "svg",
+                  "queryFeatures"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 37
+          },
+          "size": {
+            "width": 37,
+            "height": 43
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "You query is combined with the following substructure",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "You query is combined with the following substructure",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Form"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "You query is combined with the following substructure",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 7,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onStructureChange",
+          "rel": "actid",
+          "jpath": [],
+          "name": "idCode"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              []
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "You query is combined with the following substructure"
+    },
+    {
+      "url": "modules/types/array_search/configured_search/",
+      "configuration": {
+        "sections": {
+          "searchFields": [
+            {
+              "sections": {
+                "validation": [
+                  {
+                    "sections": {},
+                    "groups": {
+                      "general": [
+                        {
+                          "pattern": [
+                            null
+                          ],
+                          "neg": [
+                            null
+                          ],
+                          "pos": [
+                            null
+                          ],
+                          "authorize_empty": [
+                            null
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "groups": {
+                "general": [
+                  {
+                    "name": [
+                      null
+                    ],
+                    "label": [
+                      null
+                    ],
+                    "allow_undefined": [
+                      null
+                    ],
+                    "type": [
+                      null
+                    ],
+                    "searchOnField": [
+                      null
+                    ],
+                    "operator": [
+                      null
+                    ]
+                  }
+                ],
+                "defaultVal": [
+                  {
+                    "defaultVal": [
+                      null
+                    ]
+                  }
+                ],
+                "text": [
+                  {
+                    "case_sensitive": [
+                      null
+                    ]
+                  }
+                ],
+                "slider": [
+                  {
+                    "start": [
+                      null
+                    ],
+                    "end": [
+                      null
+                    ],
+                    "step": [
+                      null
+                    ]
+                  }
+                ],
+                "range": [
+                  {
+                    "start": [
+                      null
+                    ],
+                    "end": [
+                      null
+                    ],
+                    "step": [
+                      null
+                    ],
+                    "val1": [
+                      null
+                    ],
+                    "val2": [
+                      null
+                    ]
+                  }
+                ],
+                "options": [
+                  [
+                    {}
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {
+          "group": [
+            {
+              "max": [
+                "50"
+              ],
+              "disableMessage": [
+                "Click to enable search"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Form": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Form"
+        },
+        "Admin": {
+          "position": {
+            "left": 14,
+            "top": 47
+          },
+          "size": {
+            "width": 9,
+            "height": 7
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 8,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    }
+  ],
+  "variables": [
+    {
+      "jpath": [
+        ""
+      ]
+    }
+  ],
+  "aliases": [
+    {}
+  ],
+  "configuration": {
+    "title": "Explore mass DB"
+  },
+  "actionscripts": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          {
+            "name": [
+              null
+            ],
+            "script": [
+              null
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "init_script": [
+    {
+      "sections": {},
+      "groups": {
+        "general": [
+          {
+            "script": [
+              "var data=await API.createData('data', {\n    limit:500,\n    minSimilarity: 0.5\n});\n\n\nAPI.createData('idCode', '');\n \n"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "custom_filters": [
+    {
+      "sections": {
+        "modules": [
+          {
+            "sections": {},
+            "groups": {
+              "modules": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filtersLib": [
+          {
+            "sections": {},
+            "groups": {
+              "filters": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filters": [
+          {
+            "sections": {},
+            "groups": {
+              "filter": [
+                {
+                  "name": [
+                    null
+                  ],
+                  "script": [
+                    null
+                  ]
+                }
+              ],
+              "libs": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "groups": {}
+    }
+  ],
+  "actionfiles": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          [
+            {}
+          ]
+        ]
+      }
+    }
+  ]
+}
