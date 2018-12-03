@@ -38,10 +38,18 @@ async function parseNIST(baseFilename) {
         .replace(/[^0-9a-z]/g, '')
         .substring(0, 20);
 
-      if (molfileName !== mspName || molfileName !== jcampName) {
-        // debug(`Names do not match: ${molfileName} ${mspName}  ${jcampName} `);
+      let molfileEM = new MF(molfile.mf).getInfo().monoisotopicMass;
+      let mspEM = new MF(msp.formula).getInfo().monoisotopicMass;
+      let jcampEM = new MF(jcamp.mf).getInfo().monoisotopicMass;
+
+      if (molfileEM !== mspEM || molfileEM !== jcampEM) {
+        debug(
+          `MF do not match: msp:${msp.formula} jcamp:${jcamp.mf} molfile:${
+            molfile.mf
+          } ${mspName} ${jcampName} ${molfileName}`
+        );
         followingBads++;
-        if (followingBads > 500) {
+        if (followingBads > 10) {
           throw new Error('too many consecutive bad name match');
         }
       } else {

@@ -13,9 +13,12 @@ async function parseJcamp(src) {
     let jcampBuffer = jcamps[i];
     if (i % 10000 === 0) debug(`parseJcamp: ${i}/${jcamps.length}`);
     let jcamp = jcampBuffer.toString();
-    let parsed = convert(jcamp, { xy: true }).spectra[0];
+    let data = convert(jcamp, { xy: true, keepRecordsRegExp: /.*/ });
+    let parsed = data.spectra[0];
+
     if (parsed && parsed.title) {
       parsed.name = parsed.title;
+      parsed.mf = data.info.MOLFORM;
       results.push(parsed);
     }
   }

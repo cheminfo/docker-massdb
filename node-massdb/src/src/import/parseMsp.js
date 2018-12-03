@@ -3,6 +3,7 @@
 const fs = require('fs-extra');
 const bufferSplit = require('buffer-split');
 const debug = require('debug')('parseMsp');
+const MF = require('mf-parser').MF;
 
 const fieldMapping = {
   'num peaks': '',
@@ -64,6 +65,11 @@ function processMsp(msp) {
         }
       }
     }
+  }
+  if (result.formula) {
+    let info = new MF(result.formula).getInfo();
+    result.em = info.monoisotopicMass;
+    result.mw = info.mass;
   }
   return result;
 }

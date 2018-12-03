@@ -19,6 +19,10 @@ async function parseSDF(src) {
     let molecule = OCLE.Molecule.fromMolfile(molfile);
     result.ocl = molecule.getIDCodeAndCoordinates();
     result.ocl.index = molecule.getIndex();
+    let formula = molecule.getMolecularFormula();
+    result.mf = formula.formula;
+    result.mw = formula.relativeWeight;
+    result.em = formula.absoluteWeight;
     if (result.name) results.push(result);
   }
   return results;

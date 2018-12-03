@@ -111,6 +111,7 @@ module.exports = async function mass(options = {}) {
     match._id = { $in: result };
   }
   debug('Starting search');
+<<<<<<< Updated upstream
   let results =
       await collection
         .aggregate([
@@ -118,10 +119,20 @@ module.exports = async function mass(options = {}) {
           { $project: project }
         ])
         .toArray();
+=======
+  let results = await collection
+    .aggregate([
+      { $match: match },
+      { $limit: mzArray.length > 0 ? 1e6 : Number(limit) },
+      { $project: project }
+    ])
+    .toArray();
+>>>>>>> Stashed changes
   debug('Finished search');
   if (intensityArray.length > 0) {
     // need to calculate similarity
     for (let result of results) {
+<<<<<<< Updated upstream
       result.similarity =
           massSimilarity({ x: mzArray, y: intensityArray }, result.mass, {
             maxNumberPeaks: 5,
@@ -129,6 +140,18 @@ module.exports = async function mass(options = {}) {
             massPower: 3,
             slotsPerUnit: 1
           });
+=======
+      result.similarity = massSimilarity(
+        { x: mzArray, y: intensityArray },
+        result.mass,
+        {
+          maxNumberPeaks: 5,
+          intensityPower: 0.6,
+          massPower: 3,
+          slotsPerUnit: 1
+        }
+      );
+>>>>>>> Stashed changes
     }
     if (minSimilarity) {
       results = results.filter((result) => result.similarity >= minSimilarity);

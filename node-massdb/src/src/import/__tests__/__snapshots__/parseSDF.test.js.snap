@@ -3,6 +3,8 @@
 exports[`test SDF parsing 1`] = `
 Array [
   Object {
+    "em": 2.01565,
+    "mf": "H2",
     "molfile": "Hydrogen
   -NISTMS-12099911132D 1   1.0         0.0          
 
@@ -12,9 +14,34 @@ Array [
   1  2  1  0  0  0  0
 $$$$
 ",
+    "mw": 2.01588,
     "name": "Hydrogen",
+    "ocl": Object {
+      "coordinates": "!B_x",
+      "idCode": "eFAB@hBL@",
+      "index": Array [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        16640,
+      ],
+    },
   },
   Object {
+    "em": 4.028,
+    "mf": "D2",
     "molfile": "Deuterium
   -NISTMS-12099911132D 1   1.0         0.0          
 
@@ -24,7 +51,30 @@ $$$$
   1  2  1  0  0  0  0
 $$$$
 ",
+    "mw": 4.0282,
     "name": "Deuterium",
+    "ocl": Object {
+      "coordinates": "!B_x",
+      "idCode": "eFAB@hBLCBHD\`@",
+      "index": Array [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        16640,
+      ],
+    },
   },
 ]
 `;
