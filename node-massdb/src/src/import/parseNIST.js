@@ -42,14 +42,14 @@ async function parseNIST(baseFilename) {
       let mspEM = new MF(msp.formula).getInfo().monoisotopicMass;
       let jcampEM = new MF(jcamp.mf).getInfo().monoisotopicMass;
 
-      if (molfileEM !== mspEM || molfileEM !== jcampEM) {
+      if (Math.abs(molfileEM - mspEM) > 3 || Math.abs(molfileEM - jcampEM) > 3) {
         debug(
           `MF do not match: msp:${msp.formula} jcamp:${jcamp.mf} molfile:${
             molfile.mf
           } ${mspName} ${jcampName} ${molfileName}`
         );
         followingBads++;
-        if (followingBads > 10) {
+        if (followingBads > 3) {
           throw new Error('too many consecutive bad name match');
         }
       } else {
