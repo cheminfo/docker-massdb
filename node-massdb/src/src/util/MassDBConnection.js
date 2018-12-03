@@ -2,6 +2,7 @@
 
 const delay = require('delay');
 const MongoClient = require('mongodb').MongoClient;
+const debug = require('debug')('MassDBConnection');
 
 const config = require('./config');
 
@@ -24,7 +25,7 @@ MassDBConnection.prototype.getDatabase = async function getDatabase() {
       await this.init();
       break;
     } catch (e) {
-      console.log('Connection to mongo failed, waiting 5s');
+      debug('Connection to mongo failed, waiting 5s');
       await delay(5000);
     }
   }

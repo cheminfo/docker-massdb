@@ -5,7 +5,10 @@ const debug = require('debug')('createMoleculeDatabase');
 
 const massdbConnection = new (require('./MassDBConnection'))();
 
+let moleculeDB;
+
 async function createMoleculeDatabase() {
+  if (moleculeDB) return moleculeDB;
   const collection = await massdbConnection.getMassCollection();
 
   let project = {
@@ -23,12 +26,16 @@ async function createMoleculeDatabase() {
     ])
     .toArray();
 
-  massdbConnection.close();
+  await massdbConnection.close();
   debug(`Found ${results.length} entries in mongo`);
   debug('Creating OCLE db');
-  const moleculeDB = new OCLE.DB();
+  moleculeDB = new OCLE.DB();
+  let i = 0;
   for (let result of results) {
     moleculeDB.pushMoleculeInfo(result, result);
+    if (i++ % 10000 === 0) {
+      debug(`Loading ${i}/${results.length}`);
+    }
   }
   debug(`Found ${moleculeDB.getDB().length} entries in moleculeDB`);
   return moleculeDB;

@@ -56,7 +56,7 @@ async function parseNIST(baseFilename) {
   return results;
 }
 
-function getEntry(molfile, msp, jcamp) {
+function getEntry(molfile, msp) {
   let result = {};
   if (!msp.formula) return result;
 

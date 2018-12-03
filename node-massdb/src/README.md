@@ -1,4 +1,9 @@
 
+
+## Demo
+
+[Demo of the functionalities](demo/index.html)
+
 ## API
 
 ### /search/mass?

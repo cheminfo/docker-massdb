@@ -1,9 +1,8 @@
 'use strict';
 
-const delay = require('delay');
-
 const join = require('path').join;
 
+const delay = require('delay');
 const debug = require('debug')('importLoop');
 
 const importFolder = require('../util/config').importFolder;

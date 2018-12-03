@@ -1,5 +1,7 @@
 'use strict';
 
+const join = require('path').join;
+
 const fs = require('fs-extra');
 const debug = require('debug')('massdb:processNIST');
 
@@ -7,7 +9,6 @@ const MassDBConnection = require('../util/MassDBConnection');
 
 const parseNIST = require('./parseNIST');
 
-const join = require('path').join;
 
 module.exports = importNIST;
 

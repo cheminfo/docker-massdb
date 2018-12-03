@@ -23,6 +23,10 @@ services:
   massdb:
     build: ./node-massdb
     restart: always
+#    volumes:
+#      - ./node-massdb/src/src/server/staticPages:/node-massdb/src/server/staticPages
+    environment:
+      - DEBUG=*
     ports:
       - 12345:80
     depends_on:

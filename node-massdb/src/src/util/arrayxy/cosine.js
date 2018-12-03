@@ -1,7 +1,5 @@
 'use strict';
 
-const normedY = require('./normedY');
-
 /**
  * Cosine similarity between two arrayXY
  * @param {object} xy1 - First {x:[], y:[]}
